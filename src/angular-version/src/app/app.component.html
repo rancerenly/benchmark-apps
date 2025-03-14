@@ -1,0 +1,51 @@
+<div class="container">
+  <div class="jumbotron">
+    <div class="row">
+      <div class="col-md-6">
+        <h1>Angular Signals</h1>
+      </div>
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-sm-6 smallpad">
+            <button id="btn-add-rows" class="btn btn-primary btn-block" (click)="tableService.run()">Create 1,000 rows</button>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <button id="btn-create-10k" class="btn btn-primary btn-block" (click)="tableService.runLots()">Create 10,000 rows</button>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <button id="btn-add" class="btn btn-primary btn-block" (click)="tableService.add()">Append 1,000 rows</button>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <button id="btn-update" class="btn btn-primary btn-block" (click)="tableService.update()">Update every 10th Row</button>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <button id="btn-clear" class="btn btn-primary btn-block" (click)="tableService.clear()">Clear</button>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <button id="btn-swap" class="btn btn-primary btn-block" (click)="tableService.swapRows()">Swap Rows</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <table class="table table-hover table-striped test-data">
+    <tbody>
+      @for (row of tableService.data(); track row.id) {
+        <tr [class.danger]="row.id === tableService.selected()">
+          <td class="col-md-1">{{ row.id }}</td>
+          <td class="col-md-4">
+            <a (click)="tableService.select(row.id)">{{ row.label }}</a>
+          </td>
+          <td class="col-md-1">
+            <a (click)="tableService.remove(row.id)">
+              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            </a>
+          </td>
+          <td class="col-md-6"></td>
+        </tr>
+      }
+    </tbody>
+
+  </table>
+</div>
