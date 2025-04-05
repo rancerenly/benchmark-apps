@@ -5,5 +5,10 @@ export default defineConfig({
 	plugins: [sveltekit()],
 	server: {
 		port: 4203,
-	}
+	},
+	build: {
+		outDir: 'dist',
+		assetsDir: 'assets',
+	},
+	base: '/',
 });
