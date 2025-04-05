@@ -1,0 +1,50 @@
+services:
+  benchmarks:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/src
+    working_dir: /src
+    command: ["node", "src/benchmarks/benchmarks.js"]
+    depends_on:
+      - react
+      - angular
+      - vue
+      - svelte
+
+  react:
+    build:
+      context: ./src/frameworks/react-version
+      dockerfile: Dockerfile
+    ports:
+      - "4201:4201"
+    environment:
+      - HOST=0.0.0.0
+
+  angular:
+    build:
+      context: ./src/frameworks/angular-version
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    environment:
+      - HOST=0.0.0.0
+
+  vue:
+    build:
+      context: ./src/frameworks/vue-version
+      dockerfile: Dockerfile
+    ports:
+      - "4202:4202"
+    environment:
+      - HOST=0.0.0.0
+
+  svelte:
+    build:
+      context: ./src/frameworks/svelte-version
+      dockerfile: Dockerfile
+    ports:
+      - "4203:4203"
+    environment:
+      - HOST=0.0.0.0

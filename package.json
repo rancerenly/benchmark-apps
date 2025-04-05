@@ -4,8 +4,9 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc"
+    "benchmark": "node src/benchmarks/benchmarks.js"
   },
+  "type": "module",
   "devDependencies": {
     "vite": "^6.2.0",
     "lighthouse": "^12.4.0",

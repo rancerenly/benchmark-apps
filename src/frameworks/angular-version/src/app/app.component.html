@@ -1,10 +1,10 @@
 <div class="container">
   <div class="jumbotron">
-    <div class="row">
-      <div class="col-md-6">
+    <div>
+      <div>
         <h1>Angular Signals</h1>
       </div>
-      <div class="col-md-6">
+      <div>
         <div class="row">
           <div class="col-sm-6 smallpad">
             <button id="btn-add-rows" class="btn btn-primary btn-block" (click)="tableService.run()">Create 1,000 rows</button>
@@ -16,13 +16,19 @@
             <button id="btn-add" class="btn btn-primary btn-block" (click)="tableService.add()">Append 1,000 rows</button>
           </div>
           <div class="col-sm-6 smallpad">
-            <button id="btn-update" class="btn btn-primary btn-block" (click)="tableService.update()">Update every 10th Row</button>
+            <button id="btn-update" class="btn btn-primary btn-block" (click)="tableService.update()">Update all rows</button>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <button id="btn-update-10" class="btn btn-primary btn-block" (click)="tableService.updateEvery10th()">Update every 10th row</button>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <button id="btn-select" class="btn btn-primary btn-block" (click)="tableService.selectRow()">Select row</button>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <button id="btn-swap" class="btn btn-primary btn-block" (click)="tableService.swapRows()">Swap rows</button>
           </div>
           <div class="col-sm-6 smallpad">
             <button id="btn-clear" class="btn btn-primary btn-block" (click)="tableService.clear()">Clear</button>
-          </div>
-          <div class="col-sm-6 smallpad">
-            <button id="btn-swap" class="btn btn-primary btn-block" (click)="tableService.swapRows()">Swap Rows</button>
           </div>
         </div>
       </div>
@@ -38,14 +44,11 @@
             <a (click)="tableService.select(row.id)">{{ row.label }}</a>
           </td>
           <td class="col-md-1">
-            <a (click)="tableService.remove(row.id)">
-              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-            </a>
+            <button class="btn btn-danger btn-sm" (click)="tableService.remove(row.id)">Delete</button>
           </td>
           <td class="col-md-6"></td>
         </tr>
       }
     </tbody>
-
   </table>
 </div>

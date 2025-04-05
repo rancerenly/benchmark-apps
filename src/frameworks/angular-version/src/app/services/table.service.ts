@@ -44,27 +44,40 @@ export class TableService {
   }
 
   update() {
+    const updatedData = this.data().map((row) =>
+      ({ ...row, label: row.label + " !!!" })
+    );
+    this.data.set(updatedData);
+  }
+
+  updateEvery10th() {
     const updatedData = this.data().map((row, index) =>
       index % 10 === 0 ? { ...row, label: row.label + " !!!" } : row
     );
     this.data.set(updatedData);
   }
 
-  clear() {
-    this.data.set([]);
-    this.selected.set(null);
+  selectRow() {
+    const selectedRow = this.data()[0]; // Выбор первой строки как пример
+    this.selected.set(selectedRow.id);
   }
 
   swapRows() {
     const updatedData = [...this.data()];
-    if (updatedData.length > 998) {
-      [updatedData[1], updatedData[998]] = [updatedData[998], updatedData[1]];
+    if (updatedData.length > 2) {
+      [updatedData[1], updatedData[2]] = [updatedData[2], updatedData[1]];
       this.data.set(updatedData);
     }
   }
 
   remove(id: number) {
-    this.data.set(this.data().filter(row => row.id !== id));
+    const updatedData = this.data().filter((row) => row.id !== id); // Удаляем строку по id
+    this.data.set(updatedData);
+  }
+
+  clear() {
+    this.data.set([]);
+    this.selected.set(null);
   }
 
   select(id: number) {

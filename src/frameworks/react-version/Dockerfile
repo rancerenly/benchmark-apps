@@ -11,4 +11,4 @@ RUN npm run build
 
 EXPOSE 4201
 
-CMD ["npm", "run", "start"]
+CMD ["sh", "-c", "HOST=0.0.0.0 npm run start"]
