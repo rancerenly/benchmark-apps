@@ -1,5 +1,5 @@
 export const testUrls = [
-    // { url: 'http://localhost:4200', framework: 'Angular' },
+    { url: 'http://localhost:4200', framework: 'Angular' },
     { url: 'http://localhost:4201', framework: 'React' },
     { url: 'http://localhost:4202', framework: 'Vue' },
     { url: 'http://localhost:4203', framework: 'Svelte' },
@@ -16,14 +16,3 @@ export const testCases = [
     { id: 'btn-clear', name: 'Clear Rows', handler: 'clearRows' },
     { id: 'btn-remove-row', name: 'Delete Row', handler: 'removeRow' }
 ];
-
-export const config = {
-    iterations: 10,
-
-    frameworks: [
-        { name: 'Angular', url: 'http://localhost:4200' },
-        { name: 'React', url: 'http://localhost:4201' },
-        { name: 'Vue', url: 'http://localhost:4202' },
-        { name: 'Svelte', url: 'http://localhost:4203' }
-    ],
-};

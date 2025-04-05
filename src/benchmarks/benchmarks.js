@@ -1,7 +1,8 @@
 import { testUrls } from './config.js';
 import { runPlaywrightBenchmark } from "./runners/playwright/playwright.js";
+import { writeResultsToFile } from "./utils/index.js";
 
-const iterations = 1;
+const iterations = 20;
 
 const allResults = [];
 
@@ -11,4 +12,5 @@ for (const { url, framework } of testUrls) {
     allResults.push(...results);
 }
 
+writeResultsToFile(allResults);
 console.table(allResults);
