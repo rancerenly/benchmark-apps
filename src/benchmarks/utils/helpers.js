@@ -10,7 +10,7 @@ export async function createInitialRows(page) {
 }
 
 export function writeResultsToFile(results, filename = 'benchmark_results.json') {
-    const filePath = path.resolve('benchmark_results.json');
+    const filePath = path.resolve(filename);
 
     const dirPath = path.dirname(filePath);
     if (!fs.existsSync(dirPath)) {

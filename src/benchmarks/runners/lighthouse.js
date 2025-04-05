@@ -2,6 +2,19 @@ import puppeteer from 'puppeteer';
 import lighthouse from 'lighthouse';
 import { URL } from 'url';
 
+export function extractLighthouseMetrics(lhr) {
+    return {
+        performanceScore: lhr.categories.performance.score * 100,
+        firstContentfulPaint: lhr.audits['first-contentful-paint'].numericValue,
+        largestContentfulPaint: lhr.audits['largest-contentful-paint'].numericValue,
+        totalBlockingTime: lhr.audits['total-blocking-time'].numericValue,
+        cumulativeLayoutShift: lhr.audits['cumulative-layout-shift'].numericValue,
+        speedIndex: lhr.audits['speed-index'].numericValue,
+        timeToInteractive: lhr.audits['interactive'].numericValue,
+    };
+}
+
+
 export async function runLighthouseBenchmark(url, framework = "Unknown", options = { headless: false }) {
     console.log(`Running Lighthouse benchmark for ${framework} at ${url}`);
 
@@ -19,15 +32,7 @@ export async function runLighthouseBenchmark(url, framework = "Unknown", options
             onlyCategories: ['performance'],
         });
 
-        return [
-            { framework, test: 'Performance Score', averageTime: Math.round(lhr.categories.performance.score * 100), environment: 'Lighthouse' },
-            { framework, test: 'First Contentful Paint (FCP)', averageTime: Math.round(lhr.audits['first-contentful-paint'].numericValue), environment: 'Lighthouse' },
-            { framework, test: 'Largest Contentful Paint (LCP)', averageTime: Math.round(lhr.audits['largest-contentful-paint'].numericValue), environment: 'Lighthouse' },
-            { framework, test: 'Total Blocking Time (TBT)', averageTime: Math.round(lhr.audits['total-blocking-time'].numericValue), environment: 'Lighthouse' },
-            { framework, test: 'Cumulative Layout Shift (CLS)', averageTime: lhr.audits['cumulative-layout-shift'].numericValue.toFixed(2), environment: 'Lighthouse' },
-            { framework, test: 'Speed Index', averageTime: Math.round(lhr.audits['speed-index'].numericValue), environment: 'Lighthouse' },
-            { framework, test: 'Time to Interactive (TTI)', averageTime: Math.round(lhr.audits['interactive'].numericValue), environment: 'Lighthouse' },
-        ];
+        return extractLighthouseMetrics(lhr);
     } catch (e) {
         console.error('Lighthouse error:', e);
         return [];
