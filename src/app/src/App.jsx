@@ -21,10 +21,10 @@ const BenchmarkPage = () => {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const benchmarkResponse = await fetch('/benchmark_results.json');
+                const benchmarkResponse = await fetch('./benchmark_results.json');
                 const benchmarkResult = await benchmarkResponse.json();
 
-                const lighthouseResponse = await fetch('/lighthouse_results.json');
+                const lighthouseResponse = await fetch('./lighthouse_results.json');
                 const lighthouseResult = await lighthouseResponse.json();
 
                 setData(benchmarkResult);

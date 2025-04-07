@@ -1,0 +1,326 @@
+[
+  {
+    "framework": "Angular",
+    "test": "Create 1,000 Rows",
+    "averageTime": "100.13",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "100.13",
+    "maxTime": "100.13"
+  },
+  {
+    "framework": "Angular",
+    "test": "Create 10,000 Rows",
+    "averageTime": "851.22",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "851.22",
+    "maxTime": "851.22"
+  },
+  {
+    "framework": "Angular",
+    "test": "Append 1,000 Rows",
+    "averageTime": "86.86",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "86.86",
+    "maxTime": "86.86"
+  },
+  {
+    "framework": "Angular",
+    "test": "Update all rows",
+    "averageTime": "68.79",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "68.79",
+    "maxTime": "68.79"
+  },
+  {
+    "framework": "Angular",
+    "test": "Update every 10th Row",
+    "averageTime": "58.98",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "58.98",
+    "maxTime": "58.98"
+  },
+  {
+    "framework": "Angular",
+    "test": "Select row",
+    "averageTime": "26.55",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "26.55",
+    "maxTime": "26.55"
+  },
+  {
+    "framework": "Angular",
+    "test": "Swap Rows",
+    "averageTime": "42.76",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "42.76",
+    "maxTime": "42.76"
+  },
+  {
+    "framework": "Angular",
+    "test": "Clear Rows",
+    "averageTime": "33.60",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "33.60",
+    "maxTime": "33.60"
+  },
+  {
+    "framework": "Angular",
+    "test": "Delete Row",
+    "averageTime": "43.35",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "43.35",
+    "maxTime": "43.35"
+  },
+  {
+    "framework": "React",
+    "test": "Create 1,000 Rows",
+    "averageTime": "85.73",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "85.73",
+    "maxTime": "85.73"
+  },
+  {
+    "framework": "React",
+    "test": "Create 10,000 Rows",
+    "averageTime": "763.07",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "763.07",
+    "maxTime": "763.07"
+  },
+  {
+    "framework": "React",
+    "test": "Append 1,000 Rows",
+    "averageTime": "72.70",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "72.70",
+    "maxTime": "72.70"
+  },
+  {
+    "framework": "React",
+    "test": "Update all rows",
+    "averageTime": "65.87",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "65.87",
+    "maxTime": "65.87"
+  },
+  {
+    "framework": "React",
+    "test": "Update every 10th Row",
+    "averageTime": "65.00",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "65.00",
+    "maxTime": "65.00"
+  },
+  {
+    "framework": "React",
+    "test": "Select row",
+    "averageTime": "28.84",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "28.84",
+    "maxTime": "28.84"
+  },
+  {
+    "framework": "React",
+    "test": "Swap Rows",
+    "averageTime": "47.27",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "47.27",
+    "maxTime": "47.27"
+  },
+  {
+    "framework": "React",
+    "test": "Clear Rows",
+    "averageTime": "23.28",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "23.28",
+    "maxTime": "23.28"
+  },
+  {
+    "framework": "React",
+    "test": "Delete Row",
+    "averageTime": "51.52",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "51.52",
+    "maxTime": "51.52"
+  },
+  {
+    "framework": "Vue",
+    "test": "Create 1,000 Rows",
+    "averageTime": "85.36",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "85.36",
+    "maxTime": "85.36"
+  },
+  {
+    "framework": "Vue",
+    "test": "Create 10,000 Rows",
+    "averageTime": "925.73",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "925.73",
+    "maxTime": "925.73"
+  },
+  {
+    "framework": "Vue",
+    "test": "Append 1,000 Rows",
+    "averageTime": "99.69",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "99.69",
+    "maxTime": "99.69"
+  },
+  {
+    "framework": "Vue",
+    "test": "Update all rows",
+    "averageTime": "78.22",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "78.22",
+    "maxTime": "78.22"
+  },
+  {
+    "framework": "Vue",
+    "test": "Update every 10th Row",
+    "averageTime": "50.19",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "50.19",
+    "maxTime": "50.19"
+  },
+  {
+    "framework": "Vue",
+    "test": "Select row",
+    "averageTime": "22.43",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "22.43",
+    "maxTime": "22.43"
+  },
+  {
+    "framework": "Vue",
+    "test": "Swap Rows",
+    "averageTime": "50.51",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "50.51",
+    "maxTime": "50.51"
+  },
+  {
+    "framework": "Vue",
+    "test": "Clear Rows",
+    "averageTime": "23.90",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "23.90",
+    "maxTime": "23.90"
+  },
+  {
+    "framework": "Vue",
+    "test": "Delete Row",
+    "averageTime": "42.72",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "42.72",
+    "maxTime": "42.72"
+  },
+  {
+    "framework": "Svelte",
+    "test": "Create 1,000 Rows",
+    "averageTime": "81.34",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "81.34",
+    "maxTime": "81.34"
+  },
+  {
+    "framework": "Svelte",
+    "test": "Create 10,000 Rows",
+    "averageTime": "801.94",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "801.94",
+    "maxTime": "801.94"
+  },
+  {
+    "framework": "Svelte",
+    "test": "Append 1,000 Rows",
+    "averageTime": "88.57",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "88.57",
+    "maxTime": "88.57"
+  },
+  {
+    "framework": "Svelte",
+    "test": "Update all rows",
+    "averageTime": "66.37",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "66.37",
+    "maxTime": "66.37"
+  },
+  {
+    "framework": "Svelte",
+    "test": "Update every 10th Row",
+    "averageTime": "67.86",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "67.86",
+    "maxTime": "67.86"
+  },
+  {
+    "framework": "Svelte",
+    "test": "Select row",
+    "averageTime": "22.16",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "22.16",
+    "maxTime": "22.16"
+  },
+  {
+    "framework": "Svelte",
+    "test": "Swap Rows",
+    "averageTime": "48.83",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "48.83",
+    "maxTime": "48.83"
+  },
+  {
+    "framework": "Svelte",
+    "test": "Clear Rows",
+    "averageTime": "26.91",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "26.91",
+    "maxTime": "26.91"
+  },
+  {
+    "framework": "Svelte",
+    "test": "Delete Row",
+    "averageTime": "49.05",
+    "environment": "Playwright",
+    "iterations": 1,
+    "minTime": "49.05",
+    "maxTime": "49.05"
+  }
+]

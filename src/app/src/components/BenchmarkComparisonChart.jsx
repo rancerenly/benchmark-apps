@@ -47,7 +47,7 @@ const BenchmarkComparisonChart = ({ testResults }) => {
     useEffect(() => {
         const loadExternalData = async () => {
             try {
-                const response = await fetch('/externalBenchmark.json');
+                const response = await fetch('./external_benchmark.json');
                 const data = await response.json();
                 setExternalData(data);
 

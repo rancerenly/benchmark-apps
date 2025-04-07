@@ -1,0 +1,38 @@
+{
+  "Angular": {
+    "performanceScore": 100,
+    "firstContentfulPaint": 216.952,
+    "largestContentfulPaint": 216.952,
+    "totalBlockingTime": 0,
+    "cumulativeLayoutShift": 0,
+    "speedIndex": 234,
+    "timeToInteractive": 216.952
+  },
+  "React": {
+    "performanceScore": 100,
+    "firstContentfulPaint": 102.819,
+    "largestContentfulPaint": 102.819,
+    "totalBlockingTime": 0,
+    "cumulativeLayoutShift": 0,
+    "speedIndex": 119,
+    "timeToInteractive": 102.819
+  },
+  "Vue": {
+    "performanceScore": 100,
+    "firstContentfulPaint": 111.46,
+    "largestContentfulPaint": 111.46,
+    "totalBlockingTime": 0,
+    "cumulativeLayoutShift": 0,
+    "speedIndex": 113,
+    "timeToInteractive": 111.46
+  },
+  "Svelte": {
+    "performanceScore": 100,
+    "firstContentfulPaint": 119.242,
+    "largestContentfulPaint": 119.242,
+    "totalBlockingTime": 0,
+    "cumulativeLayoutShift": 0,
+    "speedIndex": 124,
+    "timeToInteractive": 119.242
+  }
+}
