@@ -4,12 +4,14 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "benchmark": "node src/benchmarks/benchmarks.js"
+    "benchmark": "node src/benchmarks/benchmarks.js",
+    "preview":  "npx ncp ./external_benchmark.json ./src/app/public/ && npx ncp ./lighthouse_results.json ./src/app/public/ && npx ncp ./benchmark_results.json ./src/app/public/ && cd ./src/app && npm run preview"
   },
   "type": "module",
   "devDependencies": {
     "gh-pages": "^6.3.0",
     "lighthouse": "^12.4.0",
+    "ncp": "^2.0.0",
     "playwright": "^1.51.0",
     "puppeteer": "^24.4.0",
     "typescript": "^5.5.3",
