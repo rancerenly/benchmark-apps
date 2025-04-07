@@ -22,7 +22,7 @@ jobs:
       - name: Build app
         run: |
           cd src/app
-          npm ci
+          npm i
           npm run build
           
           # Проверка содержимого dist (для отладки)
