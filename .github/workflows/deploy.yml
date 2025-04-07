@@ -28,7 +28,7 @@ jobs:
       - name: Install and build
         working-directory: ./src/app
         run: |
-          npm ci
+          npm i
           npm run build
           ls -la dist/
 
