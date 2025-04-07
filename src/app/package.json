@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "deploy": "vite build && gh-pages --clean -d dist"
   },
-  "homepage": "https://rancerenly.github.io/rancerenly/benchmark-apps",
+  "homepage": "https://rancerenly.github.io/benchmark-apps",
   "dependencies": {
     "recharts": "^2.15.2",
     "@emotion/react": "^11.14.0",
