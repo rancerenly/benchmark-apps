@@ -1,132 +1,261 @@
 <script setup>
-import { ref, computed, nextTick } from 'vue';
+import { ref, shallowRef } from 'vue'
+let ID = 1;
 
-const random = (max) => Math.floor(Math.random() * max);
-const A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint"];
-const C = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
-const N = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger"];
+function _random(max) {
+  return Math.round(Math.random() * 1000) % max;
+}
 
-let nextId = 1;
+function buildData(count = 1000) {
+  const adjectives = [
+    "pretty",
+    "large",
+    "big",
+    "small",
+    "tall",
+    "short",
+    "long",
+    "handsome",
+    "plain",
+    "quaint",
+    "clean",
+    "elegant",
+    "easy",
+    "angry",
+    "crazy",
+    "helpful",
+    "mushy",
+    "odd",
+    "unsightly",
+    "adorable",
+    "important",
+    "inexpensive",
+    "cheap",
+    "expensive",
+    "fancy",
+  ];
+  const colours = [
+    "red",
+    "yellow",
+    "blue",
+    "green",
+    "pink",
+    "brown",
+    "purple",
+    "brown",
+    "white",
+    "black",
+    "orange",
+  ];
+  const nouns = [
+    "table",
+    "chair",
+    "house",
+    "bbq",
+    "desk",
+    "car",
+    "pony",
+    "cookie",
+    "sandwich",
+    "burger",
+    "pizza",
+    "mouse",
+    "keyboard",
+  ];
+  const data = [];
+  for (let i = 0; i < count; i++)
+    data.push({
+      id: ID++,
+      label:
+          adjectives[_random(adjectives.length)] +
+          " " +
+          colours[_random(colours.length)] +
+          " " +
+          nouns[_random(nouns.length)],
+    });
+  return data;
+}
 
-const buildData = (count) =>
-    Array.from({ length: count }, () => ({
-      id: nextId++,
-      label: `${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]}`
-    }));
 
-const data = ref([]);
-const selected = ref(null);
-const renderComplete = ref(false);
+const selected = ref()
+const rows = shallowRef([])
 
-const addRows = () => {
-  data.value = buildData(1000);
-  selected.value = null;
-  markRenderComplete();
-};
+function setRows(update = rows.value.slice()) {
+  rows.value = update
+}
 
-const create10k = () => {
-  data.value = buildData(10000);
-  selected.value = null;
-  markRenderComplete();
-};
+function add() {
+  rows.value = rows.value.concat(buildData(1000))
+}
 
-const addRowsBatch = () => {
-  data.value = [...data.value, ...buildData(1000)];
-  markRenderComplete();
-};
+function remove(id) {
+  rows.value.splice(
+      rows.value.findIndex((d) => d.id === id),
+      1
+  )
+  setRows()
+}
 
-const updateRows = () => {
-  data.value = data.value.map((row) =>
-      ({ ...row, label: row.label + " !!!" })
-  );
-  markRenderComplete();
-};
+function select(id) {
+  selected.value = id
+}
 
-const updateEvery10th = () => {
-  data.value = data.value.map((row, index) =>
-      index % 10 === 0 ? { ...row, label: row.label + " !!!" } : row
-  );
-  markRenderComplete();
-};
+function run() {
+  setRows(buildData())
+  selected.value = undefined
+}
 
-const clearRows = () => {
-  data.value = [];
-  selected.value = null;
-  markRenderComplete();
-};
-
-const swapRows = () => {
-  if (data.value.length > 2) {
-    [data.value[1], data.value[2]] = [data.value[2], data.value[1]];
-    markRenderComplete();
+function update() {
+  const _rows = rows.value
+  for (let i = 0; i < _rows.length; i += 10) {
+    _rows[i].label += ' !!!'
   }
-};
+  setRows()
+}
 
-const removeRow = (id) => {
-  data.value = data.value.filter((row) => row.id !== id);
-  markRenderComplete();
-};
+function updateAll() {
+  const _rows = rows.value
+  for (let i = 0; i < _rows.length; i += 1) {
+    _rows[i].label += ' !!!'
+  }
+  setRows()
+}
 
-const selectRow = () => {
-  selected.value = 1;
-};
 
-const markRenderComplete = async () => {
-  await nextTick();
-  renderComplete.value = true;
-};
+function runLots() {
+  setRows(buildData(10000))
+  selected.value = undefined
+}
+
+function clear() {
+  setRows([])
+  selected.value = undefined
+}
+
+function swapRows() {
+  const _rows = rows.value
+  if (_rows.length > 998) {
+    const d1 = _rows[1]
+    const d998 = _rows[998]
+    _rows[1] = d998
+    _rows[998] = d1
+    setRows()
+  }
+}
 </script>
 
 <template>
-  <div class="container">
-    <div class="jumbotron">
-      <h1>Vue </h1>
-      <div class="row">
-        <div class="col-sm-6 smallpad">
-          <button id="btn-add-rows" class="btn btn-primary btn-block" @click="addRows">Create 1,000 rows</button>
-        </div>
-        <div class="col-sm-6 smallpad">
-          <button id="btn-create-10k" class="btn btn-primary btn-block" @click="create10k">Create 10,000 rows</button>
-        </div>
-        <div class="col-sm-6 smallpad">
-          <button id="btn-add" class="btn btn-primary btn-block" @click="addRowsBatch">Append 1,000 rows</button>
-        </div>
-        <div class="col-sm-6 smallpad">
-          <button id="btn-update" class="btn btn-primary btn-block" @click="updateRows">Update all rows</button>
-        </div>
-        <div class="col-sm-6 smallpad">
-          <button id="btn-update-10" class="btn btn-primary btn-block" @click="updateEvery10th">Update every 10th row
-          </button>
-        </div>
-        <div class="col-sm-6 smallpad">
-          <button id="btn-select" class="btn btn-primary btn-block" @click="selectRow">Select row</button>
-        </div>
-        <div class="col-sm-6 smallpad">
-          <button id="btn-swap" class="btn btn-primary btn-block" @click="swapRows">Swap rows</button>
-        </div>
-        <div class="col-sm-6 smallpad">
-          <button id="btn-clear" class="btn btn-primary btn-block" @click="clearRows">Clear</button>
+  <div class="jumbotron">
+    <div class="row">
+      <div class="col-md-6">
+        <h1>Vue.js 3</h1>
+      </div>
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-sm-6 smallpad">
+            <button
+                type="button"
+                class="btn btn-primary btn-block"
+                id="btn-add-rows"
+                @click="run"
+            >
+              Create 1,000 rows
+            </button>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <button
+                type="button"
+                class="btn btn-primary btn-block"
+                id="btn-create-10k"
+                @click="runLots"
+            >
+              Create 10,000 rows
+            </button>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <button
+                type="button"
+                class="btn btn-primary btn-block"
+                id="btn-add"
+                @click="add"
+            >
+              Append 1,000 rows
+            </button>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <button
+                type="button"
+                class="btn btn-primary btn-block"
+                id="btn-update"
+                @click="updateAll"
+            >
+              Append 1,000 rows
+            </button>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <button
+                type="button"
+                class="btn btn-primary btn-block"
+                id="btn-update-10"
+                @click="update"
+            >
+              Update every 10th row
+            </button>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <button
+                type="button"
+                class="btn btn-primary btn-block"
+                id="btn-clear"
+                @click="clear"
+            >
+              Clear
+            </button>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <button
+                type="button"
+                class="btn btn-primary btn-block"
+                id="btn-swap"
+                @click="swapRows"
+            >
+              Swap Rows
+            </button>
+            <button
+                type="button"
+                class="btn btn-primary btn-block"
+                id="btn-select"
+                @click="select(1)"
+            >
+              Select
+            </button>
+          </div>
         </div>
       </div>
     </div>
-    <table class="table table-hover table-striped">
-      <tbody>
-      <tr v-for="row in data" :key="row.id" :class="{ danger: selected === row.id }">
-        <td class="col-md-1">{{ row.id }}</td>
-        <td class="col-md-4">
-          <a href="#">{{ row.label }}</a>
-        </td>
-        <td class="col-md-1">
-          <button :id="'btn-delete-' + row.id" class="btn btn-danger" @click="removeRow(row.id)">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete
-          </button>
-        </td>
-        <td class="col-md-6"></td>
-      </tr>
-      </tbody>
-    </table>
-    <div id="render-complete" v-show="renderComplete">Render Complete</div>
   </div>
+  <table class="table table-hover table-striped test-data">
+    <tbody>
+    <tr
+        v-for="{ id, label } of rows"
+        :key="id"
+        :class="{ danger: id === selected }"
+        :data-label="label"
+        v-memo="[label, id === selected]"
+    >
+      <td class="col-md-1">{{ id }}</td>
+      <td class="col-md-4">
+        <a @click="select(id)">{{ label }}</a>
+      </td>
+      <td class="col-md-1">
+        <button class="btn btn-danger" @click="remove(id)">
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        </button>
+      </td>
+      <td class="col-md-6"></td>
+    </tr>
+    </tbody>
+  </table>
 </template>
 
 <style scoped>
