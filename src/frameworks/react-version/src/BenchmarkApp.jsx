@@ -1,113 +1,155 @@
+import { memo, useReducer } from 'react';
 import './styles.css';
-import { useState } from "react";
+
+const random = (max) => Math.round(Math.random() * 1000) % max;
 
 const A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint"];
 const C = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "white", "black", "orange"];
 const N = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger"];
 
-const random = (max) => Math.round(Math.random() * 1000) % max;
-
 let nextId = 1;
 
 const buildData = (count) => {
-    return Array.from({ length: count }, () => ({
-        id: nextId++,
-        label: `${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]}`
-    }));
+    const data = new Array(count);
+
+    for (let i = 0; i < count; i++) {
+        data[i] = {
+            id: nextId++,
+            label: `${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]}`,
+        };
+    }
+
+    return data;
 };
 
-const App = () => {
-    const [data, setData] = useState([]);
-    const [selected, setSelected] = useState(null);
+const initialState = { data: [], selected: 0 };
 
-    const updateRows = () => {
-        setData(data.map(row => ({ ...row, label: row.label + ' !!!' })));
-    };
+const listReducer = (state, action) => {
+    const { data, selected } = state;
 
-    const updateEvery10thRow = () => {
-        setData(data.map((row, index) => index % 10 === 0 ? { ...row, label: row.label + ' !!!' } : row));
-    };
+    switch (action.type) {
+        case 'RUN':
+            return { data: buildData(1000), selected: 0 };
+        case 'RUN_LOTS':
+            return { data: buildData(10000), selected: 0 };
+        case 'ADD':
+            return { data: data.concat(buildData(1000)), selected };
+        case 'UPDATE': {
+            const newData = data.slice(0);
 
-    const removeRow = (id) => {
-        setData(data.filter(row => row.id !== id));
-    };
+            for (let i = 0; i < newData.length; i += 10) {
+                const r = newData[i];
 
-    const addRows = () => {
-        setData([...data, ...buildData(1000)]);
-    };
+                newData[i] = { id: r.id, label: r.label + " !!!" };
+            }
 
-    const runLots = () => {
-        setData(buildData(10000));
-    };
-
-    const clearRows = () => {
-        setData([]);
-        setSelected(null);
-    };
-
-    const swapRows = () => {
-        if (data.length > 2) {
-            const newData = [...data];
-            [newData[1], newData[2]] = [newData[2], newData[1]];
-            setData(newData);
+            return { data: newData, selected };
         }
-    };
+        case 'UPDATE_ALL': {
+            const newData = data.slice(0);
 
-    const selectRow = (id) => {
-        setSelected(id);
-    };
+            for (let i = 0; i < newData.length; i += 1) {
+                const r = newData[i];
 
-    const Button = ({ title, onClick, id }) => (
-        <button className="btn btn-primary btn-block" id={id} onClick={onClick}>{title}</button>
-    );
+                newData[i] = { id: r.id, label: r.label + " !!!" };
+            }
 
-    return (
-        <div className="container">
-            <div className="jumbotron">
-                <h1>React</h1>
-                <div className="row">
-                    <div className="col-sm-6 smallpad">
-                        <Button id="btn-add-rows" title="Create 1,000 rows" onClick={() => setData(buildData(1000))} />
-                    </div>
-                    <div className="col-sm-6 smallpad">
-                        <Button id="btn-create-10k" title="Create 10,000 rows" onClick={runLots} />
-                    </div>
-                    <div className="col-sm-6 smallpad">
-                        <Button id="btn-add" title="Append 1,000 rows" onClick={addRows} />
-                    </div>
-                    <div className="col-sm-6 smallpad">
-                        <Button id="btn-update" title="Update all rows" onClick={updateRows} />
-                    </div>
-                    <div className="col-sm-6 smallpad">
-                        <Button id="btn-update-10" title="Update every 10th row" onClick={updateEvery10thRow} />
-                    </div>
-                    <div className="col-sm-6 smallpad">
-                        <Button id="btn-select" title="Select row" onClick={() => selectRow(data[0]?.id)} />
-                    </div>
-                    <div className="col-sm-6 smallpad">
-                        <Button id="btn-swap" title="Swap Rows" onClick={swapRows} />
-                    </div>
-                    <div className="col-sm-6 smallpad">
-                        <Button id="btn-clear" title="Clear" onClick={clearRows} />
-                    </div>
+            return { data: newData, selected };
+        }
+        case 'CLEAR':
+            return { data: [], selected: 0 };
+        case 'SWAP_ROWS':
+            const newdata = [...data];
+            if (data.length > 998) {
+                const d1 = newdata[1];
+                const d2 = newdata[2];
+                newdata[1] = d2;
+                newdata[2] = d1;
+            }
+            return { data: newdata, selected };
+        case 'REMOVE': {
+            const idx = data.findIndex((d) => d.id === action.id);
+
+            return { data: [...data.slice(0, idx), ...data.slice(idx + 1)], selected };
+        }
+        case 'SELECT':
+            return { data, selected: action.id };
+        default:
+            return state;
+    }
+};
+
+
+
+const Component = memo(({ dispatch }) => (
+    <div className="container">
+        <div className="jumbotron">
+            <h1>React Hooks </h1>
+            <div className="row">
+                <div className="col-md-6">
+                    <Button id="btn-add-rows" title="Create 1,000 rows" cb={() => dispatch({type: 'RUN'})}/>
+                </div>
+                <div className="col-md-6">
+                    <Button id="btn-create-10k" title="Create 10,000 rows" cb={() => dispatch({type: 'RUN_LOTS'})}/>
+                </div>
+                <div className="col-md-6">
+                    <Button id="btn-add" title="Append 1,000 rows" cb={() => dispatch({type: 'ADD'})}/>
+                </div>
+                <div className="col-md-6">
+                    <Button id="btn-update" title="Update all rows" cb={() => dispatch({type: 'UPDATE_ALL'})}/>
+                </div>
+                <div className="col-md-6">
+                    <Button id="btn-select" title="Select row" cb={() => dispatch({type: 'SELECT', id: 1001 })}/>
+                </div>
+                <div className="col-md-6">
+                    <Button id="btn-update-10" title="Update every 10th row" cb={() => dispatch({type: 'UPDATE'})}/>
+                </div>
+                <div className="col-md-6">
+                    <Button id="btn-clear" title="Clear" cb={() => dispatch({type: 'CLEAR'})}/>
+                </div>
+                <div className="col-md-6">
+                    <Button id="btn-swap" title="Swap Rows" cb={() => dispatch({type: 'SWAP_ROWS'})}/>
                 </div>
             </div>
-
-            <table className="table table-hover table-striped">
-                <tbody>
-                {data.map(row => (
-                    <tr key={row.id} className={selected === row.id ? 'danger' : ''}>
-                        <td>{row.id}</td>
-                        <td>{row.label}</td>
-                        <td>
-                            <button className="btn btn-danger btn-sm" onClick={() => removeRow(row.id)}>Delete</button>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
         </div>
-    );
-};
+    </div>
+), () => true);
+
+const Row = memo(({selected, item, dispatch}) => (
+    <tr className={selected ? "danger" : ""}>
+
+    <td className="col-md-1">{item.id}</td>
+        <td className="col-md-4">
+            <a>{item.label}</a>
+            <a onClick={() => dispatch({type: 'SELECT', id: item.id})}>{item.label}</a>
+        </td>
+        <td className="col-md-1">
+            <button className="btn btn-danger btn-sm" onClick={() => dispatch({type: 'REMOVE', id: item.id})} > Delete </button>
+        </td>
+        <td className="col-md-6"/>
+    </tr>
+), (prevProps, nextProps) => prevProps.selected === nextProps.selected && prevProps.item === nextProps.item)
+
+const Button = ({id, cb, title}) => (
+    <div className="col-sm-6 smallpad">
+        <button type="button" className="btn btn-primary btn-block" id={id} onClick={cb}>{title}</button>
+    </div>
+);
+
+const App = () => {
+    const [{data, selected}, dispatch] = useReducer(listReducer, initialState);
+
+    console.log('selected', selected)
+    return (<div className="container">
+        <Component dispatch={dispatch}/>
+        <table className="table table-hover table-striped test-data">
+            <tbody>
+            {data.map(item => (
+                <Row key={item.id} item={item} selected={selected === item.id} dispatch={dispatch} />
+            ))}
+            </tbody>
+        </table>
+    </div>);
+}
 
 export default App;

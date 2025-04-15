@@ -3,13 +3,11 @@ import { Box, Typography, Paper } from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const AllTestsLineChart = ({ testResults, frameworks }) => {
-    // Фильтруем тесты, исключая тест с 10k записями
     const filteredTests = testResults.filter(test =>
         !test.test.includes('10,000') &&
         !test.test.includes('10000')
     );
 
-    // Подготовка данных для графика
     const prepareChartData = () => {
         return frameworks.map(framework => {
             const frameworkData = { framework };
@@ -22,7 +20,6 @@ const AllTestsLineChart = ({ testResults, frameworks }) => {
 
     const chartData = prepareChartData();
 
-    // Создаем линии для каждого теста
     const renderTestLines = () => {
         return filteredTests.map((test, index) => (
             <Line

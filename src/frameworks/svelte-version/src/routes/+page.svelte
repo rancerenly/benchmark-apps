@@ -1,139 +1,193 @@
 <script>
-  import { writable } from 'svelte/store';
+	let rowId = 1;
+	let data = $state.raw([]);
+	let selected = $state.raw();
 
-  const A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint"];
-  const C = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "white", "black", "orange"];
-  const N = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger"];
+	const adjectives = [
+		'pretty',
+		'large',
+		'big',
+		'small',
+		'tall',
+		'short',
+		'long',
+		'handsome',
+		'plain',
+		'quaint',
+		'clean',
+		'elegant',
+		'easy',
+		'angry',
+		'crazy',
+		'helpful',
+		'mushy',
+		'odd',
+		'unsightly',
+		'adorable',
+		'important',
+		'inexpensive',
+		'cheap',
+		'expensive',
+		'fancy'
+	];
+	const colours = [
+		'red',
+		'yellow',
+		'blue',
+		'green',
+		'pink',
+		'brown',
+		'purple',
+		'brown',
+		'white',
+		'black',
+		'orange'
+	];
+	const nouns = [
+		'table',
+		'chair',
+		'house',
+		'bbq',
+		'desk',
+		'car',
+		'pony',
+		'cookie',
+		'sandwich',
+		'burger',
+		'pizza',
+		'mouse',
+		'keyboard'
+	];
 
-  let nextId = 1;
+	const add = () => (data = [...data, ...buildData(1000)]),
+		clear = () => {
+			data = [];
+		},
+		partialUpdate = () => {
+			for (let i = 0; i < data.length; i += 10) {
+				const row = data[i];
+				row.label = row.label + ' !!!';
+			}
+		},
 
-  const buildData = (count) =>
-    Array.from({ length: count }, () => ({
-      id: nextId++,
-      label: `${A[Math.floor(Math.random() * A.length)]} ${C[Math.floor(Math.random() * C.length)]} ${N[Math.floor(Math.random() * N.length)]}`
-    }));
+		update = () => {
+            data.update(d => d.map(item => ({ ...item, label: item.label + " !!!" })));
+          },
+		remove = (row) => {
+			const clone = data.slice();
+			clone.splice(clone.indexOf(row), 1);
+			data = clone;
+		},
+		run = () => {
+			data = buildData(1000);
+		},
+		runLots = () => {
+			data = buildData(10000);
+		},
+		select = () => {
+            console.log('select');
+            selected = 1;
+        },
+		swapRows = () => {
+			if (data.length > 998) {
+				const clone = data.slice();
+				const tmp = clone[1];
+				clone[1] = clone[2];
+				clone[2] = tmp;
+				data = clone;
+			}
+		};
 
-  const data = writable([]);
-  const selected = writable(null);
-  const renderComplete = writable(false);
+	function _random(max) {
+		return Math.round(Math.random() * 1000) % max;
+	}
 
-  function updateRenderStatus() {
-    renderComplete.set(false);
-    setTimeout(() => renderComplete.set(true), 0);
-  }
+	class Item {
+		id = rowId++;
+		label = $state.raw(
+			`${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`,
+		);
+	}
 
-  function run() {
-    data.set(buildData(1000));
-    selected.set(null);
-    updateRenderStatus();
-  }
-
-  function runLots() {
-    data.set(buildData(10000));
-    selected.set(null);
-    updateRenderStatus();
-  }
-
-  function add() {
-    data.update(d => [...d, ...buildData(1000)]);
-    updateRenderStatus();
-  }
-
-  function update() {
-    data.update(d => d.map(item => ({ ...item, label: item.label + " !!!" })));
-    updateRenderStatus();
-  }
-
-  function updateEvery10th() {
-    data.update(d => d.map((item, index) =>
-      index % 10 === 0 ? { ...item, label: item.label + " !!!" } : item));
-    updateRenderStatus();
-  }
-
-  function clear() {
-    data.set([]);
-    selected.set(null);
-    updateRenderStatus();
-  }
-
-  function swapRows() {
-    data.update(d => {
-      if (d.length > 2) {
-        const newData = [...d];
-        [newData[1], newData[2]] = [newData[2], newData[1]]; // меняем местами 2 строки
-        return newData;
-      }
-      return d;
-    });
-    updateRenderStatus();
-  }
-
-  function remove(id) {
-    data.update(d => d.filter(row => row.id !== id));
-    updateRenderStatus();
-  }
-
-  function select() {
-    console.log('select');
-    selected.set(1);
-  }
+	function buildData(count = 1000) {
+		const data = new Array(count);
+		for (let i = 0; i < count; i++) {
+			data[i] = new Item();
+		}
+		return data;
+	}
 </script>
 
-<div class="container">
-  <div class="jumbotron">
-    <h1>Svelte Benchmark</h1>
-    <div class="row">
-      <!-- Кнопки -->
-      <div class="col-sm-6 smallpad">
-        <button id="btn-add-rows" class="btn btn-primary btn-block" on:click={run}>Create 1,000 rows</button>
-      </div>
-      <div class="col-sm-6 smallpad">
-        <button id="btn-create-10k" class="btn btn-primary btn-block" on:click={runLots}>Create 10,000 rows</button>
-      </div>
-      <div class="col-sm-6 smallpad">
-        <button id="btn-add" class="btn btn-primary btn-block" on:click={add}>Append 1,000 rows</button>
-      </div>
-      <div class="col-sm-6 smallpad">
-        <button id="btn-update" class="btn btn-primary btn-block" on:click={update}>Update all rows</button>
-      </div>
-      <div class="col-sm-6 smallpad">
-        <button id="btn-update-10" class="btn btn-primary btn-block" on:click={updateEvery10th}>Update every 10th row</button>
-      </div>
-      <div class="col-sm-6 smallpad">
-        <button id="btn-select" class="btn btn-primary btn-block" on:click={() => select()}>Select row</button>
-      </div>
-      <div class="col-sm-6 smallpad">
-        <button id="btn-swap" class="btn btn-primary btn-block" on:click={swapRows}>Swap rows</button>
-      </div>
-      <div class="col-sm-6 smallpad">
-        <button id="btn-clear" class="btn btn-primary btn-block" on:click={clear}>Clear</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Таблица данных -->
-  <table class="table table-hover table-striped test-data">
-    <tbody>
-      {#each $data as row (row.id)}
-        <tr class:danger={$selected === row.id}>
-          <td class="col-md-1">{row.id}</td>
-          <td class="col-md-4">
-            <a>{row.label}</a>
-          </td>
-          <td class="col-md-1">
-            <button class="btn btn-danger" on:click|stopPropagation={() => remove(row.id)}>
-              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Delete
-            </button>
-          </td>
-          <td class="col-md-6"></td>
-        </tr>
-      {/each}
-    </tbody>
-  </table>
-
-  {#if $renderComplete}
-    <div id="render-complete">Render Complete</div>
-  {/if}
+<div id="main" class="container">
+	<div class="jumbotron">
+		<div class="row">
+			<div class="col-md-6">
+				<h1>Svelte </h1>
+			</div>
+			<div class="col-md-6">
+				<div class="row">
+					<div class="col-sm-6 smallpad">
+						<button type="button" class="btn btn-primary btn-block" id="btn-add-rows" onclick={run}
+							>Create 1,000 rows</button
+						>
+					</div>
+					<div class="col-sm-6 smallpad">
+						<button type="button" class="btn btn-primary btn-block" id="btn-create-10k" onclick={runLots}
+							>Create 10,000 rows</button
+						>
+					</div>
+					<div class="col-sm-6 smallpad">
+						<button type="button" class="btn btn-primary btn-block" id="btn-add" onclick={add}
+							>Append 1,000 rows</button
+						>
+					</div>
+					<div class="col-sm-6 smallpad">
+                            <button id="btn-update" class="btn btn-primary btn-block" onclick={update}>Update all rows</button>
+                    </div>
+					<div class="col-sm-6 smallpad">
+						<button
+							type="button"
+							class="btn btn-primary btn-block"
+							id="btn-update-10"
+							onclick={partialUpdate}>Update every 10th row</button
+						>
+					</div>
+					<div class="col-sm-6 smallpad">
+                            <button id="btn-select" class="btn btn-primary btn-block" onclick={() => select()}>Select row</button>
+                    </div>
+					<div class="col-sm-6 smallpad">
+						<button type="button" class="btn btn-primary btn-block" id="btn-clear" onclick={clear}
+							>Clear</button
+						>
+					</div>
+					<div class="col-sm-6 smallpad">
+						<button
+							type="button"
+							class="btn btn-primary btn-block"
+							id="btn-swap"
+							onclick={swapRows}>Swap Rows</button
+						>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<table class="table table-hover table-striped test-data">
+		<tbody>
+			{#each data as row (row)}
+				<tr class={selected === row.id ? 'danger' : ''}
+					><td class="col-md-1">{row.id}</td><td class="col-md-4"
+						><a>{row.label}</a
+						></td
+					><td class="col-md-1"
+						><button class="btn btn-danger" onclick={() => remove(row)}
+							><span class="glyphicon glyphicon-remove" aria-hidden="true" />Delete </button>
+						</td
+					><td class="col-md-6" /></tr
+				>
+			{/each}
+		</tbody>
+	</table>
 </div>
 
 <style>

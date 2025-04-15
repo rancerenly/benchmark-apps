@@ -29,7 +29,6 @@ const ChartsComponent = ({ testResults, frameworks }) => {
     const [chartType, setChartType] = useState('bar');
     const [selectedTest, setSelectedTest] = useState(testResults[0]?.test || 'Create 1,000 Rows');
 
-    // Преобразуем данные для графиков
     const prepareChartData = () => {
         if (!selectedTest) return [];
 
