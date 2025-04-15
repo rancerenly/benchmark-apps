@@ -1,38 +1,38 @@
 {
   "Angular": {
     "performanceScore": 100,
-    "firstContentfulPaint": 216.952,
-    "largestContentfulPaint": 216.952,
+    "firstContentfulPaint": 158.032,
+    "largestContentfulPaint": 158.032,
     "totalBlockingTime": 0,
     "cumulativeLayoutShift": 0,
-    "speedIndex": 234,
-    "timeToInteractive": 216.952
+    "speedIndex": 176,
+    "timeToInteractive": 158.032
   },
   "React": {
-    "performanceScore": 100,
-    "firstContentfulPaint": 102.819,
-    "largestContentfulPaint": 102.819,
+    "performanceScore": 95,
+    "firstContentfulPaint": 2385.982,
+    "largestContentfulPaint": 2385.982,
     "totalBlockingTime": 0,
     "cumulativeLayoutShift": 0,
-    "speedIndex": 119,
-    "timeToInteractive": 102.819
+    "speedIndex": 2392,
+    "timeToInteractive": 2385.982
   },
   "Vue": {
     "performanceScore": 100,
-    "firstContentfulPaint": 111.46,
-    "largestContentfulPaint": 111.46,
+    "firstContentfulPaint": 194.242,
+    "largestContentfulPaint": 194.242,
     "totalBlockingTime": 0,
     "cumulativeLayoutShift": 0,
-    "speedIndex": 113,
-    "timeToInteractive": 111.46
+    "speedIndex": 203,
+    "timeToInteractive": 194.242
   },
   "Svelte": {
     "performanceScore": 100,
-    "firstContentfulPaint": 119.242,
-    "largestContentfulPaint": 119.242,
+    "firstContentfulPaint": 757.939,
+    "largestContentfulPaint": 757.939,
     "totalBlockingTime": 0,
     "cumulativeLayoutShift": 0,
-    "speedIndex": 124,
-    "timeToInteractive": 119.242
+    "speedIndex": 762,
+    "timeToInteractive": 757.939
   }
 }

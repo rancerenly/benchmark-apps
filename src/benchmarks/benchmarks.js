@@ -2,7 +2,7 @@ import { testUrls } from './config.js';
 import { runPlaywrightBenchmark, runLighthouseBenchmark } from "./runners/index.js";
 import { writeResultsToFile } from "./utils/index.js";
 
-const iterations = 1;
+const iterations = 20;
 
 const allResults = [];
 
