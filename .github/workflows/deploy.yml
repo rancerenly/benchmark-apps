@@ -27,7 +27,6 @@ jobs:
 
       - name: Copy benchmark files
         run: |
-          cp ./external_benchmark.json ./src/app/public/
           cp ./lighthouse_results.json ./src/app/public/
           cp ./benchmark_results.json ./src/app/public/
 

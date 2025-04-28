@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "benchmark": "node src/benchmarks/benchmarks.js",
-    "preview":  "npx ncp ./external_benchmark.json ./src/app/public/ && npx ncp ./lighthouse_results.json ./src/app/public/ && npx ncp ./benchmark_results.json ./src/app/public/ && cd ./src/app && npm run preview"
+    "preview":  "npx ncp ./lighthouse_results.json ./src/app/public/ && npx ncp ./benchmark_results.json ./src/app/public/ && cd ./src/app && npm run preview"
   },
   "type": "module",
   "devDependencies": {
