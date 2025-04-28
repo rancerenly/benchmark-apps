@@ -5,7 +5,6 @@ import LighthouseMetricsTable from "./components/LighthouseMetricsTable.jsx";
 import ChartsComponent from "./components/Charts.jsx";
 import AllTestsLineChart from "./components/AllTestsLineChart.jsx";
 import AllTestsBarChart from "./components/AllTestsBarChart.jsx";
-import BenchmarkComparisonChart from "./components/BenchmarkComparisonChart.jsx";
 
 const BenchmarkPage = () => {
     const [data, setData] = useState([]);
@@ -120,8 +119,6 @@ const BenchmarkPage = () => {
                 testResults={testResults}
                 frameworks={frameworks}
             />
-
-            <BenchmarkComparisonChart testResults={myBenchmarks} />
 
         </Container>
     );
