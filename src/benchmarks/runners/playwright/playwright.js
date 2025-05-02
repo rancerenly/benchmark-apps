@@ -104,7 +104,7 @@ export async function runPlaywrightBenchmark(url, framework = "Unknown", environ
     const browser = await chromium.launch({ headless: false, args: ['--no-sandbox'] });
     const results = [];
 
-    for (const testCase of testCases) {
+    for (let testCase of testCases) {
         console.log('---------------------------------------------------------------------------------------------------')
         console.log('Current testCase: ', testCase);
         console.log('All iterations:', iterations)
