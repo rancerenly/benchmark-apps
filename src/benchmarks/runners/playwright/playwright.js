@@ -109,16 +109,20 @@ export async function runPlaywrightBenchmark(url, framework = "Unknown", environ
         console.log('Current testCase: ', testCase);
         console.log('All iterations:', iterations)
         const times = [];
+        const domMutationsArr = [];
 
         for (let i = 0; i < iterations; i++) {
             console.log('Current iteration: ',i);
+
             const context = await browser.newContext();
             const page = await context.newPage();
             await page.goto(url, { waitUntil: 'networkidle' });
 
             try {
 
-                await handlers[testCase.id](page);
+                if (testCase.id !== 'btn-add-rows') {
+                    await handlers[testCase.id](page);
+                }
 
                 let button = await page.$(`button#${testCase.id}`);
 
@@ -131,11 +135,24 @@ export async function runPlaywrightBenchmark(url, framework = "Unknown", environ
                 const prevState = await page.locator('table tr').allTextContents();
 
                 const start = performance.now();
+
+                await page.evaluate(() => {
+                    window.__domMutationCount = 0;
+                });
+
                 await button.click();
+
                 await waitForTestCompletion(page, testCase.id, prevState);
 
                 const end = performance.now();
 
+                const domMutations = await page.evaluate(() => {
+                    return window.__domMutationCount || 0
+                });
+                console.log('domMutations', domMutations);
+                domMutationsArr.push(domMutations);
+
+                console.log('domMutationsArr', domMutationsArr);
                 times.push(end - start);
             } catch (error) {
                 console.error(`Error in ${testCase.name} (iteration ${i + 1}): ${error.message}`);
@@ -152,6 +169,7 @@ export async function runPlaywrightBenchmark(url, framework = "Unknown", environ
             iterations: times.length,
             minTime: times.length ? Math.min(...times).toFixed(2) : "N/A",
             maxTime: times.length ? Math.max(...times).toFixed(2) : "N/A",
+            averageDomMutations: domMutationsArr.length ? (domMutationsArr.reduce((a,b) => a+b) / domMutationsArr.length).toFixed(2) : "N/A",
             ...(times.length === 0 && { error: "No successful iterations" })
         });
     }

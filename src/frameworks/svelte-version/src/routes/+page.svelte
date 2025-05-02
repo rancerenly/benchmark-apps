@@ -1,6 +1,50 @@
-<script>
+<script lang="ts">
+	import { onMount, onDestroy } from 'svelte';
+
+	let mutationCount = 0;
+
+	let observer: MutationObserver | undefined;
+
+	onMount(() => {
+		const table = document.querySelector('table.test-data');
+		if (!table) return;
+
+		mutationCount = 0;
+
+		// Инициализируем window.__domMutationCount только если window существует
+		if (typeof window !== 'undefined') {
+			window.__domMutationCount = 0;
+		}
+
+		observer = new MutationObserver((mutationsList) => {
+			console.log('mutationsList', mutationsList);
+			mutationCount = mutationsList.length;
+			window.__domMutationCount = mutationCount;
+		});
+
+		observer.observe(table, {
+			attributes: true,
+			childList: true,
+			subtree: true,
+			characterData: true
+		});
+	});
+
+	onDestroy(() => {
+		if (observer) observer.disconnect();
+
+		if (typeof window !== 'undefined') {
+			window.__domMutationCount = mutationCount;
+		}
+	});
+
+	interface Row {
+		id: number;
+		label: string;
+	}
+
 	let rowId = 1;
-	let data = $state.raw([]);
+	let data = $state.raw<Row[]>([]);
 	let selected = $state.raw();
 
 	const adjectives = [
@@ -71,7 +115,7 @@
 		},
 
 		update = () => {
-            data.update(d => d.map(item => ({ ...item, label: item.label + " !!!" })));
+            data.map(d => d.label = d.label + "!!!");
           },
 		remove = (row) => {
 			const clone = data.slice();

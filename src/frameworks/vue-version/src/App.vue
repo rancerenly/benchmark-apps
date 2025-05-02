@@ -1,6 +1,36 @@
 <script setup>
-import { ref, shallowRef } from 'vue'
+import { onMounted, onBeforeUnmount, ref, shallowRef } from 'vue';
 let ID = 1;
+
+const domMutationCount = ref(0);
+let observer = null;
+
+onMounted(() => {
+  const table = document.querySelector('table.test-data');
+  if (!table) return;
+
+  observer = new MutationObserver((mutationsList) => {
+    console.log('list mutationsList', mutationsList);
+    domMutationCount.value = mutationsList.length;
+    window.__domMutationCount = domMutationCount.value;
+  });
+
+  observer.observe(table, {
+    attributes: true,
+    childList: true,
+    subtree: true,
+    characterData: true
+  });
+
+  window.__domMutationCount = 0;
+  domMutationCount.value = 0;
+});
+
+onBeforeUnmount(() => {
+  if (observer) observer.disconnect();
+  window.__domMutationCount = domMutationCount.value;
+});
+
 
 function _random(max) {
   return Math.round(Math.random() * 1000) % max;

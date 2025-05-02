@@ -1,4 +1,4 @@
-import { memo, useReducer } from 'react';
+import { memo, useReducer, useEffect, useRef } from 'react';
 import './styles.css';
 
 const random = (max) => Math.round(Math.random() * 1000) % max;
@@ -6,6 +6,37 @@ const random = (max) => Math.round(Math.random() * 1000) % max;
 const A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint"];
 const C = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "white", "black", "orange"];
 const N = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger"];
+
+function useDomMutationCounter() {
+    const mutationCountRef = useRef(0);
+    const observerRef = useRef(null);
+
+    useEffect(() => {
+        const table = document.querySelector('table.test-data');
+        if (!table) return;
+
+        mutationCountRef.current = 0;
+
+        observerRef.current = new MutationObserver((mutationsList) => {
+            mutationCountRef.current = mutationsList.length;
+            window.__domMutationCount = mutationCountRef.current;
+        });
+
+        observerRef.current.observe(table, {
+            attributes: true,
+            childList: true,
+            subtree: true,
+            characterData: true
+        });
+
+        window.__domMutationCount = 0;
+
+        return () => {
+            if (observerRef.current) observerRef.current.disconnect();
+            window.__domMutationCount = mutationCountRef.current;
+        };
+    }, []);
+}
 
 let nextId = 1;
 
@@ -99,7 +130,7 @@ const Component = memo(({ dispatch }) => (
                     <Button id="btn-update" title="Update all rows" cb={() => dispatch({type: 'UPDATE_ALL'})}/>
                 </div>
                 <div className="col-md-6">
-                    <Button id="btn-select" title="Select row" cb={() => dispatch({type: 'SELECT', id: 1001 })}/>
+                    <Button id="btn-select" title="Select row" cb={() => dispatch({type: 'SELECT', id: 1 })}/>
                 </div>
                 <div className="col-md-6">
                     <Button id="btn-update-10" title="Update every 10th row" cb={() => dispatch({type: 'UPDATE'})}/>
@@ -137,9 +168,9 @@ const Button = ({id, cb, title}) => (
 );
 
 const App = () => {
+    useDomMutationCounter();
     const [{data, selected}, dispatch] = useReducer(listReducer, initialState);
 
-    console.log('selected', selected)
     return (<div className="container">
         <Component dispatch={dispatch}/>
         <table className="table table-hover table-striped test-data">
