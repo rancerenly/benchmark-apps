@@ -110,49 +110,74 @@ export async function runPlaywrightBenchmark(url, framework = "Unknown", environ
         console.log('All iterations:', iterations)
         const times = [];
         const domMutationsArr = [];
+        const visiblePaintDelays = [];
 
         for (let i = 0; i < iterations; i++) {
-            console.log('Current iteration: ',i);
 
             const context = await browser.newContext();
             const page = await context.newPage();
             await page.goto(url, { waitUntil: 'networkidle' });
 
             try {
-
                 if (testCase.id !== 'btn-add-rows') {
                     await handlers[testCase.id](page);
                 }
 
                 let button = await page.$(`button#${testCase.id}`);
-
                 if (testCase.id === 'btn-remove-row') {
                     button = page.locator('.btn-danger').first();
                 }
-
                 if (!button) throw new Error(`Button ${testCase.id} not found`);
 
                 const prevState = await page.locator('table tr').allTextContents();
-
-                const start = performance.now();
 
                 await page.evaluate(() => {
                     window.__domMutationCount = 0;
                 });
 
+                const visiblePaintPromise = page.evaluate(() => {
+                    return new Promise((resolve) => {
+                        const startTime = performance.now();
+                        const targetNode = document.querySelector('table.test-data');
+                        if (!targetNode) {
+                            resolve(-1);
+                            return;
+                        }
+                        const observer = new MutationObserver((mutations, obs) => {
+                            obs.disconnect();
+                            requestAnimationFrame(() => {
+                                const endTime = performance.now();
+                                resolve(endTime - startTime);
+                            });
+                        });
+                        observer.observe(targetNode, {
+                            attributes: true,
+                            childList: true,
+                            subtree: true,
+                            characterData: true,
+                        });
+                    });
+                });
+
+                const start = performance.now();
+
+
                 await button.click();
+
+                const visiblePaintDelay = await visiblePaintPromise;
+                visiblePaintDelays.push(visiblePaintDelay);
+
 
                 await waitForTestCompletion(page, testCase.id, prevState);
 
                 const end = performance.now();
 
-                const domMutations = await page.evaluate(() => {
-                    return window.__domMutationCount || 0
-                });
-                console.log('domMutations', domMutations);
+
+                console.log('visiblePaintDelays', visiblePaintDelays)
+
+                const domMutations = await page.evaluate(() => window.__domMutationCount || 0);
                 domMutationsArr.push(domMutations);
 
-                console.log('domMutationsArr', domMutationsArr);
                 times.push(end - start);
             } catch (error) {
                 console.error(`Error in ${testCase.name} (iteration ${i + 1}): ${error.message}`);
@@ -170,6 +195,7 @@ export async function runPlaywrightBenchmark(url, framework = "Unknown", environ
             minTime: times.length ? Math.min(...times).toFixed(2) : "N/A",
             maxTime: times.length ? Math.max(...times).toFixed(2) : "N/A",
             averageDomMutations: domMutationsArr.length ? (domMutationsArr.reduce((a,b) => a+b) / domMutationsArr.length).toFixed(2) : "N/A",
+            averageVisiblePaintDelay: visiblePaintDelays.length ? (visiblePaintDelays.reduce((a,b) => a+b) / visiblePaintDelays.length).toFixed(2) : "N/A",
             ...(times.length === 0 && { error: "No successful iterations" })
         });
     }
