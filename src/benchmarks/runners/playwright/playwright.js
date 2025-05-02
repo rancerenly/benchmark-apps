@@ -111,6 +111,7 @@ export async function runPlaywrightBenchmark(url, framework = "Unknown", environ
         const times = [];
         const domMutationsArr = [];
         const visiblePaintDelays = [];
+        const fpsArr = [];
 
         for (let i = 0; i < iterations; i++) {
 
@@ -133,6 +134,23 @@ export async function runPlaywrightBenchmark(url, framework = "Unknown", environ
 
                 await page.evaluate(() => {
                     window.__domMutationCount = 0;
+                });
+
+                // FPS
+                await page.evaluate(() => {
+                    window.__fpsData = {
+                        frameCount: 0,
+                        running: true,
+                        startTime: performance.now(),
+                        fps: 0,
+                    };
+
+                    function countFrame() {
+                        if (!window.__fpsData.running) return;
+                        window.__fpsData.frameCount++;
+                        requestAnimationFrame(countFrame);
+                    }
+                    requestAnimationFrame(countFrame);
                 });
 
                 const visiblePaintPromise = page.evaluate(() => {
@@ -172,12 +190,17 @@ export async function runPlaywrightBenchmark(url, framework = "Unknown", environ
 
                 const end = performance.now();
 
-
-                console.log('visiblePaintDelays', visiblePaintDelays)
+                // end FPS
+                const fps = await page.evaluate(() => {
+                    window.__fpsData.running = false;
+                    const durationSec = (performance.now() - window.__fpsData.startTime) / 1000;
+                    window.__fpsData.fps = window.__fpsData.frameCount / durationSec;
+                    return window.__fpsData.fps;
+                });
 
                 const domMutations = await page.evaluate(() => window.__domMutationCount || 0);
                 domMutationsArr.push(domMutations);
-
+                fpsArr.push(fps);
                 times.push(end - start);
             } catch (error) {
                 console.error(`Error in ${testCase.name} (iteration ${i + 1}): ${error.message}`);
@@ -196,6 +219,7 @@ export async function runPlaywrightBenchmark(url, framework = "Unknown", environ
             maxTime: times.length ? Math.max(...times).toFixed(2) : "N/A",
             averageDomMutations: domMutationsArr.length ? (domMutationsArr.reduce((a,b) => a+b) / domMutationsArr.length).toFixed(2) : "N/A",
             averageVisiblePaintDelay: visiblePaintDelays.length ? (visiblePaintDelays.reduce((a,b) => a+b) / visiblePaintDelays.length).toFixed(2) : "N/A",
+            averageFPS: fpsArr.length ? (fpsArr.reduce((a,b) => a+b) / fpsArr.length).toFixed(2) : "N/A",
             ...(times.length === 0 && { error: "No successful iterations" })
         });
     }
